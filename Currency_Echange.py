@@ -1,10 +1,20 @@
+from tkinter import ttk
 import requests
 from tkinter import *
 from tkinter import messagebox as mb
 
 
+# генерируем список кодов валют
+def generation_list_rates():
+    list_currency = []
+    answer = requests.get("https://open.er-api.com/v6/latest/RUB")
+    json_info = answer.json()
+    list_currency = list(json_info["rates"].keys())
+    return list_currency
+
+
 def func_exchange():
-    code_currency = e.get().upper()
+    code_currency = combo.get()
     if code_currency:
         answer = requests.get("https://open.er-api.com/v6/latest/RUB")
         json_info = answer.json()
@@ -24,14 +34,19 @@ window = Tk()
 window.title("Курс валют")
 window.geometry("400x500")
 
-e = Entry(window)
-e.pack()
+spisok_currency = generation_list_rates()
+
+t_m = Label(text="Выберите код валюты")
+t_m.pack(pady = [10, 10])
+
+combo = ttk.Combobox(window, values=spisok_currency)
+combo.pack(pady = [10, 10])
 
 content_label = Label(window)
-content_label.pack()
+content_label.pack(pady = [10, 10])
 
 bttn = Button(window, text="Получить курс рубля", command=func_exchange)
-bttn.pack()
+bttn.pack(pady = [10, 10])
 
 
 
