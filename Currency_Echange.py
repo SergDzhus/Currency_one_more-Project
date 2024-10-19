@@ -10,13 +10,29 @@ from tkinter import *
 #    json_info = answer.json()
 #    list_currency = list(json_info["rates"].keys())
 #    return list_currency
+def update_base_label1(event):
+    code = combo_from_1.get()
+    name = spisok_currency[code]
+    base_label1.config(text=name)
 
+
+def update_base_label2(event):
+    code = combo_from_2.get()
+    name = spisok_currency[code]
+    base_label2.config(text=name)
+
+
+def update_target_label(event):
+    code = combo_to.get()
+    name = spisok_currency[code]
+    label_to.config(text=name)
 
 def func_exchange_1():
     code_currency_target = combo_to.get()
     code_currency_base_1 = combo_from_1.get()
     if code_currency_target and code_currency_base_1:
         answer = requests.get(f"https://open.er-api.com/v6/latest/{code_currency_base_1}")
+        answer.raise_for_status()
         json_info = answer.json()
         if code_currency_target in json_info["rates"]:
             rezult = json_info["rates"][code_currency_target]
@@ -35,6 +51,7 @@ def func_exchange_2():
     code_currency_base_2 = combo_from_2.get()
     if code_currency_target and code_currency_base_2:
         answer = requests.get(f"https://open.er-api.com/v6/latest/{code_currency_base_2}")
+        answer.raise_for_status()
         json_info = answer.json()
         if code_currency_target in json_info["rates"]:
             rezult = json_info["rates"][code_currency_target]
@@ -44,8 +61,8 @@ def func_exchange_2():
             content_label_2.config(text=f"Такого кода валюты не существует!")
             content_label_2.config(fg="red")
     else:
-        content_label_1.config(text=f"Код валюты не введен!")
-        content_label_1.config(fg="red")
+        content_label_2.config(text=f"Код валюты не введен!")
+        content_label_2.config(fg="red")
 
 
 def func_exchange():
@@ -226,17 +243,25 @@ t_m_from_1 = Label(text="Выберите код первой базовой в�
 t_m_from_1.pack(padx = 10, pady = 10)
 combo_from_1 = ttk.Combobox(window, values=list(spisok_currency.keys()))
 combo_from_1.pack(padx = 10, pady = 10)
+combo_from_1.bind("<<ComboboxSelected>>", update_base_label1)
+base_label1 = ttk.Label()
+base_label1.pack(padx=10, pady=10)
 
 t_m_from_2 = Label(text="Выберите код второй базовой валюты")
 t_m_from_2.pack(padx = 10, pady = 10)
 combo_from_2 = ttk.Combobox(window, values=list(spisok_currency.keys()))
 combo_from_2.pack(padx = 10, pady = 10)
+combo_from_2.bind("<<ComboboxSelected>>", update_base_label2)
+base_label2 = ttk.Label()
+base_label2.pack(padx=10, pady=10)
 
 t_m_to = Label(text="Выберите код конечной валюты")
 t_m_to.pack(padx = 10, pady = 10)
-
 combo_to = ttk.Combobox(window, values=list(spisok_currency.keys()))
 combo_to.pack(padx = 10, pady = 10)
+combo_to.bind("<<ComboboxSelected>>", update_target_label)
+label_to = ttk.Label()
+label_to.pack(padx=10, pady=10)
 
 content_label_1 = Label(window)
 content_label_1.pack(padx = 10, pady = 10)
