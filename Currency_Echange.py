@@ -12,23 +12,45 @@ from tkinter import *
 #    return list_currency
 
 
-def func_exchange():
+def func_exchange_1():
     code_currency_target = combo_to.get()
-    code_currency_base = combo_from.get()
-    if code_currency_target and code_currency_base:
-        answer = requests.get(f"https://open.er-api.com/v6/latest/{code_currency_base}")
+    code_currency_base_1 = combo_from_1.get()
+    if code_currency_target and code_currency_base_1:
+        answer = requests.get(f"https://open.er-api.com/v6/latest/{code_currency_base_1}")
         json_info = answer.json()
         if code_currency_target in json_info["rates"]:
             rezult = json_info["rates"][code_currency_target]
-            content_label.config(text=f"1 {code_currency_base} - {rezult}{code_currency_target}")
-            content_label.config(fg="green")
+            content_label_1.config(text=f"1 {code_currency_base_1} - {rezult:.2f}{code_currency_target}")
+            content_label_1.config(fg="green")
         else:
-            content_label.config(text=f"Такого кода валюты не существует!")
-            content_label.config(fg="red")
+            content_label_1.config(text=f"Такого кода валюты не существует!")
+            content_label_1.config(fg="red")
     else:
-        content_label.config(text=f"Код валюты не введен!")
-        content_label.config(fg="red")
+        content_label_1.config(text=f"Код валюты не введен!")
+        content_label_1.config(fg="red")
 
+
+def func_exchange_2():
+    code_currency_target = combo_to.get()
+    code_currency_base_2 = combo_from_2.get()
+    if code_currency_target and code_currency_base_2:
+        answer = requests.get(f"https://open.er-api.com/v6/latest/{code_currency_base_2}")
+        json_info = answer.json()
+        if code_currency_target in json_info["rates"]:
+            rezult = json_info["rates"][code_currency_target]
+            content_label_2.config(text=f"1 {code_currency_base_2} - {rezult:.2f}{code_currency_target}")
+            content_label_2.config(fg="green")
+        else:
+            content_label_2.config(text=f"Такого кода валюты не существует!")
+            content_label_2.config(fg="red")
+    else:
+        content_label_1.config(text=f"Код валюты не введен!")
+        content_label_1.config(fg="red")
+
+
+def func_exchange():
+    func_exchange_1()
+    func_exchange_2()
 
 
 window = Tk()
@@ -200,11 +222,15 @@ spisok_currency = {
     "ZWL": "Зимбабвийский доллар"
 }
 
-t_m_from = Label(text="Выберите код базовой валюты")
-t_m_from.pack(padx = 10, pady = 10)
+t_m_from_1 = Label(text="Выберите код первой базовой валюты")
+t_m_from_1.pack(padx = 10, pady = 10)
+combo_from_1 = ttk.Combobox(window, values=list(spisok_currency.keys()))
+combo_from_1.pack(padx = 10, pady = 10)
 
-combo_from = ttk.Combobox(window, values=list(spisok_currency.keys()))
-combo_from.pack(padx = 10, pady = 10)
+t_m_from_2 = Label(text="Выберите код второй базовой валюты")
+t_m_from_2.pack(padx = 10, pady = 10)
+combo_from_2 = ttk.Combobox(window, values=list(spisok_currency.keys()))
+combo_from_2.pack(padx = 10, pady = 10)
 
 t_m_to = Label(text="Выберите код конечной валюты")
 t_m_to.pack(padx = 10, pady = 10)
@@ -212,8 +238,11 @@ t_m_to.pack(padx = 10, pady = 10)
 combo_to = ttk.Combobox(window, values=list(spisok_currency.keys()))
 combo_to.pack(padx = 10, pady = 10)
 
-content_label = Label(window)
-content_label.pack(padx = 10, pady = 10)
+content_label_1 = Label(window)
+content_label_1.pack(padx = 10, pady = 10)
+
+content_label_2 = Label(window)
+content_label_2.pack(padx = 10, pady = 10)
 
 bttn = Button(window, text="Получить курс", command=func_exchange)
 bttn.pack(padx = 10, pady = 10)
